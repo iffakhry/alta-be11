@@ -58,6 +58,19 @@ func calculateCircle(diameter float64) (float64, float64, string) {
 	return keliling, luas, "sukses"
 }
 
+func calculateCircleNamed(diameter float64) (keliling float64, luas float64, str string) {
+	luas = math.Pi * math.Pow(diameter/2, 2) // 3.14 * r2
+	keliling = math.Pi * diameter            // 3.14 * d
+	// return 2 value
+	return keliling, luas, "sukses"
+}
+
+// function having named return parameter
+func multiplication(a, b int) (mul int) {
+	mul = a * b
+	return
+}
+
 func main() {
 	// greeting(20)
 	// greeting(8)
@@ -68,4 +81,9 @@ func main() {
 	tempk, templ, temps := calculateCircle(data)
 	// tempk, _, temps := calculateCircle(data)
 	fmt.Println("keliling:", tempk, "luas:", templ, "str:", temps)
+
+	var data1 = multiplication(10, 20)
+	fmt.Println(data1)
+
+	fmt.Println(multiplication(5, 10))
 }
