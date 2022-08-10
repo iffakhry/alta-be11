@@ -10,7 +10,7 @@ func Cetak(angka ...int) {
 
 func main() {
 	a, b, c, d := 10, 20, 30, 40
-	Cetak(a, b, c, d)
+	Cetak(a, b, c, d, 10, 20, 50)
 	// var data = []int{1, 2, 3, 4}
 	// fmt.Println(&data[0])
 }
