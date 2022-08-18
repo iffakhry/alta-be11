@@ -21,6 +21,8 @@ INSERT INTO data_mengajar (id, guru_id, mata_pelajaran_id, kelas, jam_mulai, jam
 VALUES ("DM-0003",7, 4, "12B", "07:00", "09:00");
 INSERT INTO data_mengajar (id, guru_id, mata_pelajaran_id, kelas, jam_mulai, jam_selesai)
 VALUES ("DM-0004",8, 5, "11A", "07:00", "09:00");
+INSERT INTO data_mengajar (id, guru_id, mata_pelajaran_id, kelas, jam_mulai, jam_selesai)
+VALUES ("DM-0005",8, 5, "10A", "13:00", "15:00");
 
 -- membaca data
 SELECT * FROM guru;
@@ -105,3 +107,54 @@ WHERE dm.jam_mulai = "07:00";
 
 SELECT g.id, g.nama, g.nip, dm.kelas, dm.jam_mulai, dm.jam_selesai from data_mengajar dm
 RIGHT JOIN guru g ON g.id = dm.guru_id;
+
+-- AGGREGATION
+SELECT * FROM mata_pelajaran;
+
+SELECT min(kkm) FROM mata_pelajaran where id between 1 and 4;
+SELECT MAX(kkm) FROM mata_pelajaran;
+
+SELECT SUM(kkm) as jumlah_kkm FROM mata_pelajaran;
+
+-- SUM with GROUP BY
+select dm.guru_id, guru.nama, SUM(mp.kkm) as jumlah_kkm FROM data_mengajar dm
+inner join mata_pelajaran mp on dm.mata_pelajaran_id = mp.id
+inner join guru ON dm.guru_id = guru.id
+group by dm.guru_id;
+
+SELECT guru.id, guru.nama, SUM(mp.kkm) as jumlah_kkm FROM guru
+INNER JOIN data_mengajar dm ON guru.id = dm.guru_id
+INNER JOIN mata_pelajaran mp ON dm.mata_pelajaran_id = mp.id
+WHERE guru.id BETWEEN 5 AND 10
+GROUP BY guru.id;
+
+
+SELECT AVG(kkm) as avg_kkm FROM mata_pelajaran;
+
+SELECT COUNT(id) as count_kkm FROM mata_pelajaran;
+SELECT COUNT(id) as count_kkm, count(kkm) FROM mata_pelajaran where kkm >= 60;
+
+
+SELECT g.id, g.nama, g.nip, dm.kelas, dm.jam_mulai, dm.jam_selesai, mp.nama_pelajaran, mp.kkm from guru g
+INNER JOIN data_mengajar dm ON g.id = dm.guru_id
+INNER JOIN mata_pelajaran mp ON dm.mata_pelajaran_id = mp.id
+;
+
+-- HAVING
+select dm.guru_id, guru.nama FROM data_mengajar dm
+inner join mata_pelajaran mp on dm.mata_pelajaran_id = mp.id
+inner join guru ON dm.guru_id = guru.id
+group by dm.guru_id
+having sum(mp.kkm) >= 100;
+
+select guru.id, guru.nama FROM guru
+inner join data_mengajar dm ON guru.id = dm.guru_id
+group by guru.id
+having count(mata_pelajaran_id) >= 2;
+
+
+
+
+
+
+
