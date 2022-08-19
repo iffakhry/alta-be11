@@ -109,7 +109,7 @@ func main() {
 		}
 	case 5:
 		{
-			//mendapatkan data guru berdasarkan id tertentu
+			//mendapatkan data guru berdasarkan id tertentu --> 1 baris
 		}
 
 	}
