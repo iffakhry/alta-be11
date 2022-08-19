@@ -152,6 +152,33 @@ inner join data_mengajar dm ON guru.id = dm.guru_id
 group by guru.id
 having count(mata_pelajaran_id) >= 2;
 
+-- SUBQUERY
+-- tampilkan data guru yang sudah punya data mengajar
+SELECT * FROM guru WHERE guru.id IN (SELECT guru_id FROM data_mengajar GROUP BY guru_id);
+
+SELECT * FROM guru;
+SELECT guru_id FROM data_mengajar GROUP BY guru_id;
+
+UPDATE guru SET
+guru.status = "aktif"
+WHERE guru.id IN (SELECT guru_id FROM data_mengajar GROUP BY guru_id);
+
+UPDATE guru SET
+guru.status = "tidak aktif"
+WHERE guru.id NOT IN (SELECT guru_id FROM data_mengajar GROUP BY guru_id);
+
+select dm.guru_id FROM data_mengajar dm
+group by dm.guru_id
+having count(dm.mata_pelajaran_id) >= 2;
+
+UPDATE guru SET
+guru.status = "bonus"
+WHERE guru.id IN (select dm.guru_id FROM data_mengajar dm
+group by dm.guru_id
+having count(dm.mata_pelajaran_id) >= 2);
+
+
+
 
 
 
