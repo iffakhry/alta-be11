@@ -17,6 +17,11 @@ type Guru struct {
 	Status string
 }
 
+/*
+install mysql via docker
+
+docker run --name mysqlbe11 -p 3307:3306 -e MYSQL_ROOT_PASSWORD=qwerty123 -e MYSQL_DATABASE=altabe11 -d mysql
+*/
 func main() {
 
 	// defer fmt.Println("halo 1")
@@ -26,6 +31,11 @@ func main() {
 
 	// membuat koneksi dari app golang ke DB
 	// <username>:<password>@tcp(<hostname>:<portDB>)/<db_name>
+
+	// check ip docker docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysqlbe11
+	// ip address docker 172.17.0.1
+	// 					172.17.0.2
+	//					host.docker.internal
 	db, err := sql.Open("mysql", "root:qwerty123@tcp(127.0.0.1:3306)/db_be11")
 
 	if err != nil {
@@ -44,7 +54,7 @@ func main() {
 	switch pilihan {
 	case 1:
 		{
-			results, errselect := db.Query("SELECT id, nama, nip, status FROM guru")
+			results, errselect := db.Query("SELECT id, nama, nip FROM guru")
 			if errselect != nil {
 				fmt.Println("error select", errselect.Error())
 			}
@@ -52,7 +62,7 @@ func main() {
 			var dataGuruAll []Guru //penampung semua data guru
 			for results.Next() {   // membaca per baris
 				var rowguru Guru // penampung tiap baris
-				errScan := results.Scan(&rowguru.ID, &rowguru.Nama, &rowguru.Nip, &rowguru.Status)
+				errScan := results.Scan(&rowguru.ID, &rowguru.Nama, &rowguru.Nip)
 				if errScan != nil {
 					fmt.Println("error scan", errScan.Error())
 				}
@@ -61,7 +71,7 @@ func main() {
 			}
 			// fmt.Println(dataGuruAll)
 			for _, v := range dataGuruAll {
-				fmt.Println("ID:", v.ID, "Nama:", v.Nama, "NIP:", v.Nip, "Status:", v.Status)
+				fmt.Println("ID:", v.ID, "Nama:", v.Nama, "NIP:", v.Nip)
 			}
 		}
 	case 2:
