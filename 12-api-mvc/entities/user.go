@@ -11,6 +11,7 @@ type UserCore struct {
 	Address   string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	Wallets   []WalletCore
 }
 
 type UserRequest struct {
@@ -23,8 +24,8 @@ type UserRequest struct {
 
 type UserResponse struct {
 	Name    string `json:"name"`
-	Email   string `json:"email"`
-	Address string `json:"address"`
+	Email   string `json:"email,omitempty"`
+	Address string `json:"address,omitempty"`
 }
 
 func RequestToCore(dataRequest UserRequest) UserCore {

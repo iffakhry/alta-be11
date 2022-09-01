@@ -17,6 +17,7 @@ func New() *echo.Echo {
 	e.PUT("/users/:id", controllers.UpdateUserController)
 
 	e.POST("/wallets", controllers.CreateWalletController)
+	e.GET("/wallets", controllers.GetWalletController)
 
 	return e
 }

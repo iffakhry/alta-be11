@@ -32,3 +32,11 @@ func CreateWalletController(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, helper.SuccessResponseHelper("insert data success"))
 }
+
+func GetWalletController(c echo.Context) error {
+	result, err := repositories.SelectAllWallet()
+	if err != nil {
+		return helper.FailedResponseHelper(c, http.StatusInternalServerError, "failed to get Data")
+	}
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("success", entities.CoreToResponseWalletList(result)))
+}

@@ -10,6 +10,7 @@ import (
 func SelectAllUser() ([]entities.UserCore, error) {
 	var data []models.User
 	tx := config.DB.Find(&data)
+	// tx := config.DB.Preload("Wallets").Find(&data)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

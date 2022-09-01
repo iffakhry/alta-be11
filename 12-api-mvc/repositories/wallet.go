@@ -16,3 +16,15 @@ func InsertWallet(data entities.WalletCore) (row int, err error) {
 
 	return int(tx.RowsAffected), nil
 }
+
+func SelectAllWallet() ([]entities.WalletCore, error) {
+	var data []models.Wallet
+	// tx := config.DB.Find(&data)
+	tx := config.DB.Preload("User").Find(&data)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	dataCore := models.ToEntitiesWalletList(data)
+	return dataCore, nil
+
+}
