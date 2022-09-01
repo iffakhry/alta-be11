@@ -26,3 +26,31 @@ type UserResponse struct {
 	Email   string `json:"email"`
 	Address string `json:"address"`
 }
+
+func RequestToCore(dataRequest UserRequest) UserCore {
+	dataCore := UserCore{
+		Name:     dataRequest.Name,
+		Email:    dataRequest.Email,
+		Password: dataRequest.Password,
+		Phone:    dataRequest.Phone,
+		Address:  dataRequest.Address,
+	}
+	return dataCore
+}
+
+func CoreToResponse(dataCore UserCore) UserResponse {
+	dataResponse := UserResponse{
+		Name:    dataCore.Name,
+		Email:   dataCore.Email,
+		Address: dataCore.Address,
+	}
+	return dataResponse
+}
+
+func CoreToResponseList(dataCore []UserCore) []UserResponse {
+	var dataResponse []UserResponse
+	for _, v := range dataCore {
+		dataResponse = append(dataResponse, CoreToResponse(v))
+	}
+	return dataResponse
+}

@@ -26,3 +26,18 @@ func FromEntities(dataCore entities.UserCore) User {
 	}
 	return dataModel
 }
+
+func ToEntities(dataModel User) entities.UserCore {
+	dataEntities := entities.UserCore{
+		ID:        dataModel.ID,
+		Name:      dataModel.Name,
+		Email:     dataModel.Email,
+		Password:  dataModel.Password,
+		Phone:     dataModel.Phone,
+		Address:   dataModel.Address,
+		CreatedAt: dataModel.CreatedAt,
+		UpdatedAt: dataModel.UpdatedAt,
+	}
+
+	return dataEntities
+}

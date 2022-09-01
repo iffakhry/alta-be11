@@ -13,6 +13,10 @@ func New() *echo.Echo {
 	// set route endpoint
 	e.GET("/users", controllers.GetUserController)
 	e.POST("/users", controllers.CreateUserController)
+	e.GET("/users/:id", controllers.GetUserByIdController)
+	e.PUT("/users/:id", controllers.UpdateUserController)
+
+	e.POST("/wallets", controllers.CreateWalletController)
 
 	return e
 }
