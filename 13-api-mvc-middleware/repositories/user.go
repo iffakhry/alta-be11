@@ -56,6 +56,16 @@ func SelectUserById(id int) (entities.UserCore, error) {
 	return models.ToEntities(user), nil
 }
 
+func SelectProfileUser(id int) (entities.UserCore, error) {
+	var user models.User
+	tx := config.DB.First(&user, id)
+	if tx.Error != nil {
+		return entities.UserCore{}, tx.Error
+	}
+
+	return models.ToEntities(user), nil
+}
+
 func UpdateUser(id int, dataUpdate entities.UserCore) (int, error) {
 	// var user models.User
 	// user.ID = uint(id)

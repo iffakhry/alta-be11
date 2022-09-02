@@ -3,6 +3,7 @@ package controllers
 import (
 	"be11/apimvc/entities"
 	"be11/apimvc/helper"
+	"be11/apimvc/middlewares"
 	"be11/apimvc/repositories"
 	"log"
 	"net/http"
@@ -12,6 +13,11 @@ import (
 )
 
 func GetUserController(c echo.Context) error {
+	idtoken := middlewares.ExtractToken(c)
+	log.Println("idtoken", idtoken)
+	if idtoken != 1 {
+		return helper.FailedResponseHelper(c, http.StatusUnauthorized, "you don't have access to this feature")
+	}
 	result, err := repositories.SelectAllUser()
 	if err != nil {
 		return helper.FailedResponseHelper(c, http.StatusInternalServerError, "failed to get Data")
@@ -63,11 +69,26 @@ func GetUserByIdController(c echo.Context) error {
 	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("success get data", entities.CoreToResponse(result)))
 }
 
+func ProfileUserController(c echo.Context) error {
+	idtoken := middlewares.ExtractToken(c)
+	result, err := repositories.SelectProfileUser(idtoken)
+	if err != nil {
+		return helper.FailedResponseHelper(c, http.StatusInternalServerError, "failed to get data profile")
+	}
+	return c.JSON(http.StatusOK, helper.SuccessDataResponseHelper("success get data profile", entities.CoreToResponse(result)))
+}
+
 func UpdateUserController(c echo.Context) error {
+
 	id := c.Param("id")
 	idConv, errConv := strconv.Atoi(id)
 	if errConv != nil {
 		return helper.FailedResponseHelper(c, http.StatusBadRequest, "param must be number")
+	}
+
+	idtoken := middlewares.ExtractToken(c)
+	if idtoken != idConv {
+		return helper.FailedResponseHelper(c, http.StatusUnauthorized, "unauthorized")
 	}
 	var dataUpdate entities.UserRequest
 	errBind := c.Bind(&dataUpdate)

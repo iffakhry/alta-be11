@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"be11/apimvc/config"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -27,11 +28,28 @@ func CreateToken(userId int) (string, error) {
 }
 
 func ExtractToken(c echo.Context) int {
-	user := c.Get("user").(*jwt.Token)
-	if user.Valid {
-		claims := user.Claims.(jwt.MapClaims)
+
+	// user := c.Get("user").(*jwt.Token)
+	// if user.Valid {
+	// 	claims := user.Claims.(jwt.MapClaims)
+	// 	userId := claims["userId"].(float64)
+	// 	// username := claims["name"].(string)
+	// 	return int(userId)
+	// }
+	// return -1
+
+	headerData := c.Request().Header.Get("Authorization")
+	dataAuth := strings.Split(headerData, " ")
+	token := dataAuth[len(dataAuth)-1]
+	datajwt, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.SECRET_JWT), nil
+	})
+
+	if datajwt.Valid {
+		claims := datajwt.Claims.(jwt.MapClaims)
 		userId := claims["userId"].(float64)
 		return int(userId)
 	}
-	return 0
+
+	return -1
 }

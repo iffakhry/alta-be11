@@ -16,7 +16,8 @@ func New() *echo.Echo {
 	e.GET("/users", controllers.GetUserController, middlewares.JWTMiddleware())
 	e.POST("/users", controllers.CreateUserController)
 	e.GET("/users/:id", controllers.GetUserByIdController)
-	e.PUT("/users/:id", controllers.UpdateUserController)
+	e.PUT("/users/:id", controllers.UpdateUserController, middlewares.JWTMiddleware())
+	e.GET("/profile", controllers.ProfileUserController, middlewares.JWTMiddleware())
 
 	e.POST("/wallets", controllers.CreateWalletController)
 	e.GET("/wallets", controllers.GetWalletController)
