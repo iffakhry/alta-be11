@@ -1,6 +1,9 @@
 package usecase
 
-import "be11/apiclean/features/user"
+import (
+	"be11/apiclean/features/user"
+	"errors"
+)
 
 type userUsecase struct {
 	userData user.DataInterface
@@ -18,6 +21,9 @@ func (usecase *userUsecase) GetAll() ([]user.Core, error) {
 }
 
 func (usecase *userUsecase) PostData(data user.Core) (int, error) {
-
-	return 1, nil
+	if data.Name == "" {
+		return -1, errors.New("nama tidak boleh kosong")
+	}
+	row, err := usecase.userData.InsertData(data)
+	return row, err
 }

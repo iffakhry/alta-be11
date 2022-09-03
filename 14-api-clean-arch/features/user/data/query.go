@@ -23,21 +23,27 @@ func (repo *userData) SelectAllData() ([]user.Core, error) {
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	var dataCore []user.Core
-	for _, v := range data {
-		dataCore = append(dataCore, user.Core{
-			ID:       v.ID,
-			Name:     v.Name,
-			Email:    v.Email,
-			Password: v.Password,
-			Phone:    v.Phone,
-			Address:  v.Address,
-		})
-	}
+	// var dataCore []user.Core
+	// for _, v := range data {
+	// 	dataCore = append(dataCore, user.Core{
+	// 		ID:       v.ID,
+	// 		Name:     v.Name,
+	// 		Email:    v.Email,
+	// 		Password: v.Password,
+	// 		Phone:    v.Phone,
+	// 		Address:  v.Address,
+	// 	})
+	// }
+	dataCore := toCoreList(data)
 	return dataCore, nil
 }
 
 func (repo *userData) InsertData(data user.Core) (int, error) {
+	dataModel := fromCore(data)
+	tx := repo.db.Create(&dataModel)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
 
-	return 1, nil
+	return int(tx.RowsAffected), nil
 }
