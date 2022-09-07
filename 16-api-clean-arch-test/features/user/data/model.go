@@ -13,10 +13,10 @@ type User struct {
 	Password string
 	Phone    string
 	Address  string
-	Wallets  []WalletModel
+	Wallets  []Wallet
 }
 
-type WalletModel struct {
+type Wallet struct {
 	gorm.Model
 	Jenis  string
 	Nomor  string

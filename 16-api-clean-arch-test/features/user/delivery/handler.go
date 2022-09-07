@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"be11/apiclean/features/user"
-	"be11/apiclean/middlewares"
 	"be11/apiclean/utils/helper"
 	"net/http"
 
@@ -18,7 +17,7 @@ func New(e *echo.Echo, usecase user.UsecaseInterface) {
 		userUsecase: usecase,
 	}
 
-	e.GET("/users", handler.GetAll, middlewares.JWTMiddleware())
+	e.GET("/users", handler.GetAll)
 	e.POST("/users", handler.PostData)
 }
 

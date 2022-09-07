@@ -155,6 +155,8 @@ git clone https://github.com/iffakhry/alta-be11-cicd.git
 - buat folder .github/workflows
 - buat file `deploy.yml`
 - push ke branch `main`
+
+referensi : https://github.com/appleboy/ssh-action
 ```bash
 # sample deploy.yml
 name: Deploy to EC2
