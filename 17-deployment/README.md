@@ -140,4 +140,69 @@ or
 sudo chmod 777 /var/run/docker.sock
 ```
 
+# Notes CICD
+
+## Clone repository 
+- lakukan clone github repo di server. 
+```bash
+git clone <url-git-repo>
+
+# example
+git clone https://github.com/iffakhry/alta-be11-cicd.git
+```
+
+## Setup Github action 
+- buat folder .github/workflows
+- buat file `deploy.yml`
+- push ke branch `main`
+```bash
+# sample deploy.yml
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing connect to server using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/ubuntu/alta-be11-cicd
+            git pull origin main
+            docker stop be11Api
+            docker rm be11Api
+            docker build -t be11-api:latest .
+            docker run -d -p 8080:8000 -e SERVER_PORT=${{ secrets.SERVER_PORT }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name be11Api be11-api:latest
+
+```
+
+## Konfigurasi SECRET Variable
+```bash
+HOST --> IP Public v4 Server
+KEY --> isi ssh private key(gcp) atau file .pem(aws)
+PORT --> 22
+USERNAME --> ubuntu (aws) atau username (gcp)
+
+DB_HOST --> (rds)db endpoint, (gcp)ip database server
+DB_NAME --> database name
+DB_USERNAME
+DB_PASSWORD
+DB_PORT --> 3306
+
+SERVER_PORT 
+```
+
+
+
+
 
