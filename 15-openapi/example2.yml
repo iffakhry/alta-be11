@@ -1,0 +1,1308 @@
+openapi: '3.0.2'
+info:
+  title: ALTA API
+  description: Alterra Academy Project
+  termsOfService: http://example.com/terms/
+  contact:
+    name: API Support
+    url: http://www.example.com/support
+    email: support@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: '1.0.0'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/iffakhry/alta-api/1.0.0
+    variables:
+      environment: 
+        default: dev
+        enum:
+          - "prod"
+          - "dev"
+tags:
+  - name: Auth
+    description: Authentication
+  - name: Users
+    description: User control
+  - name: Books
+    description: Book data management
+paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: login user
+      description: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestLogin'
+            examples:
+              userData1:
+                description: "Example data user"
+                value: {
+                  email: "alta@alterra.id",
+                  password: "inipassword"
+                }
+              userData2:
+                description: "Example data user"
+                value: {
+                  email: "alta2@alterra.id",
+                  password: "inipassword2"
+                }
+              # type: object
+              # properties:
+              #   email:
+              #     type: string
+              #     example: alta@mail.com
+              #   password:
+              #     type: string
+              #     example: inipassword
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseLoginSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "Login Success",
+                    data: {
+                      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "Login Success",
+                    data: {
+                      token: "AyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+
+        '400':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "Login Failed. Email and Password incorrect."
+                  }
+                responseData2:
+                  description: response failed 2
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "Login Failed. Your email doesn't match any entry"
+                  }
+  ####################################
+  #  USERS
+  ####################################
+  /users:
+    post:
+      tags:
+        - Users
+      summary: register
+      description: Register user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUserData'
+            examples:
+              userData1:
+                description: "Example data user"
+                value: {
+                  name: "Alta",
+                  email: "alta@alterra.id",
+                  password: "inipassword",
+                  address: "Jakarta"
+                }
+              userData2:
+                description: "Example data user"
+                value: {
+                  name: "Alta 2",
+                  email: "alta2@alterra.id",
+                  password: "inipassword2",
+                  address: "Jakarta2"
+                }
+              # type: object
+              # properties:
+              #   name:
+              #     type: string
+              #     example: Alta
+              #   email:
+              #     type: string
+              #     example: alta@mail.com
+              #   password:
+              #     type: string
+              #     example: inipassword
+              #   address:
+              #     type: string
+              #     example: Jakarta
+      responses:
+        '200':
+          $ref: '#/components/responses/responseSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      description: Get User by ID
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/getUserProfileSuccess'
+        '400':
+          $ref: '#/components/responses/getUserProfileFailed'
+    put:
+      tags:
+        - Users
+      description: Edit user profile
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Alterra Academy
+                email:
+                  type: string
+                  example: alta@gmail.com
+                password:
+                  type: string
+                  example: inipasswordbaru
+      responses:
+        '200':
+          $ref: '#/components/responses/responseSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
+    delete:
+      tags:
+        - Users
+      description: Delete User by ID
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/responseSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
+  
+  
+  ####################################
+  #  BOOKS
+  ####################################
+  /books:
+    post:
+      tags:
+        - Books
+      description: Insert new book
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: The Cruel Prince
+                category_id:
+                  type: integer
+                  example: 6
+                author_id:
+                  type: integer
+                  example: 6
+                publisher_id:
+                  type: integer
+                  example: 5
+                publish_year:
+                  type: string
+                  example: 2009
+                price:
+                  type: integer
+                  example: 500
+                quantity:
+                  type: integer
+                  example: 1
+                description:
+                  type: string
+                  example: The Cruel Prince follows Jude, a human girl living among faeries. She wants to fit in, but her stubbornness and determination cause her to stand out among the royal family, where she aspires to become a knight. Jude has a twin sister Taryn and an older sister named Vivienne, who is a Faerie. Vivienne and Jude are both very rebellious and try their hardest to get what they want, no matter the circumstances, while Taryn is more of a people-pleaser.
+      responses:
+        '200':
+          $ref: '#/components/responses/responseSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
+    get:
+      tags:
+        - Books
+      description: Get all books
+      security:
+        - JWTAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/getAllBookSuccess'
+        '400':
+          $ref: '#/components/responses/getAllBookFailed'
+  /books/search/:
+    get:
+      tags:
+        - Books
+      description: Search book by keyword
+      security:
+        - JWTAuth: []
+      parameters:
+      - in: query
+        name: title
+        schema:
+          type: string
+          example: Rich Dad
+      - in: query
+        name: author
+        schema:
+          type: string
+          example: Bob
+      responses:
+        '200':
+          $ref: '#/components/responses/searchBookByKeywordSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
+  /books/{id}:
+    get:
+      tags:
+        - Books
+      description: Get book by id
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/getBookByIdSuccess'
+        '400':
+          $ref: '#/components/responses/getBookByIdFailed'
+#==================================#
+#    COMPONENT
+#==================================#
+components:
+
+  #==================================#    
+  #    JWT
+  #==================================#
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+  #==================================#
+  #    SCHEMAS
+  #==================================#
+  schemas:
+    requestLogin:
+      type: object
+      properties:
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+    requestUserData:
+      type: object
+      properties:
+        "name":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+        "address":
+          type: string
+          minLength: 1
+    responseUserData:
+      type: object
+      properties:
+        "id":
+          type: number
+          minLength: 1
+        "name":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1
+        "address":
+          type: string
+          minLength: 1
+    successGetSingleUserResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        },
+        "data": {
+          type: object
+        }
+      }
+    successGetAllUserResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        },
+        "data": {
+          type: array,
+          items: {
+            type: object
+          }
+        }
+      }
+
+    requestBook:
+      type: object
+      properties:
+        "title":
+          type: string
+          minLength: 1
+        "category_id":
+          type: string
+          minLength: 1
+        "author_id":
+          type: string
+          minLength: 1
+        "publisher_id":
+          type: string
+          minLength: 1
+        "publish_year":
+          type: string
+          minLength: 1
+        "price":
+          type: number
+        "quantity":
+          type: number
+          minLength: 1
+        "description":
+          type: string
+          minLength: 1
+    responseLoginSuccess:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        },
+        "data":{
+          type: object
+        }
+      }
+    successResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        }
+      }
+    failedResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        }
+      }
+    
+  #==================================#    
+  #    PARAMETERS
+  #==================================#
+  # parameters:
+  #   dataBook:
+  #     name: "dataBook"
+  #     in: query 
+
+  requestBodies:
+    userData:
+      content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUserData'
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Alta
+                email:
+                  type: string
+                  example: alta@mail.com
+                password:
+                  type: string
+                  example: inipassword
+                address:
+                  type: string
+                  example: Jakarta
+
+  responses:
+    #==================================#
+    #    RESPONSE FOR GENERAL REQUEST
+    #==================================#
+    responseSuccess:
+      description: Successful Operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Successful Operation
+    responseFailed:
+      description: register failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Bad Request
+    #==================================#
+    #    RESPONSE REGISTER USER
+    #==================================#
+    registerSuccess:
+      description: register success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Register Success
+    registerFailed:
+      description: register failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Register Failed
+    #==================================#
+    #    RESPONSE LOGIN USER
+    #==================================#
+    loginSuccess:
+      description: login success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Login Success
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySWQiOjExfQ.YQ47sxFkIfbDVyQ5o6ix38w4BYxnNOPG3F5isqkyyv8
+    loginFailed:
+      description: login failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Login Failed
+    #==================================#
+    #    RESPONSE GET USER PROFILE
+    #==================================#
+    getUserProfileSuccess:
+      description: success get user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get User Profile
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Alta
+                  email:
+                    type: string
+                    example: alta@mail.com
+                  address:
+                    type: string
+                    example: Surabaya
+    getUserProfileFailed:
+      description: fail to get user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Fail to Get User Profile
+    #==================================#
+    #    RESPONSE EDIT USER PROFILE
+    #==================================#
+    editUserProfileSuccess:
+      description: success change user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Update Profile
+    editUserProfileFailed:
+      description: fail to change user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Update Profile
+    #==================================#
+    #    RESPONSE EDIT USER PASSWORD
+    #==================================#
+    editUserPasswordSuccess:
+      description: success change password
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Change Password
+    editUserPasswordFailed:
+      description: fail to change password
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Change Password
+    #==================================#
+    #    RESPONSE LOGOUT
+    #==================================#
+    logoutSuccess:
+      description: success logout
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Logout Success
+    logoutFailed:
+      description: fail to logout
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Logout Failed
+
+    ##user borrowed dan userlent belum
+
+
+    #==================================#
+    #    RESPONSE INPUT BOOK RATING
+    #==================================#
+    inputBookRatingSuccess:
+      description: success give book rating
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Give Book Rating
+    inputBookRatingFailed:
+      description: fail to give book rating
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Give Book Rating
+    #==================================#
+    #    RESPONSE INPUT BOOK RATING
+    #==================================#
+    inputBorrowerRatingSuccess:
+      description: success give borrower rating
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Give Borrower Rating
+    inputBorrowerRatingFailed:
+      description: fail to give Borrower rating
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Give Borrower Rating
+    #==================================#
+    #    RESPONSE INSERT BOOK
+    #==================================#
+    insertBookSuccess:
+      description: success insert book
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Insert Book
+    insertBookFailed:
+      description: fail to insert book
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Insert Book
+    #==================================#
+    #    RESPONSE GET ALL BOOK
+    #==================================#
+    getAllBookSuccess:
+      description: success get all books
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get All Book
+              data:
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: Rich Dad Poor Dad
+                    file_foto:
+                      type: string
+                      example: sdJksHJ12ks.jpg
+                    rent_price:
+                      type: integer
+                      example: 500
+                    address:
+                      type: string
+                      example: Depok
+                    author:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 3
+                        name:
+                          type: string
+                          example: Robert Kiyosaki
+                    publisher:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 2
+                        name:
+                          type: integer
+                          example: Gramedia
+                    category:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 4
+                        name:
+                          type: string
+                          example: Motivasi
+                    is_available:
+                      type: boolean
+                      example: true
+    getAllBookFailed:
+      description: fail to get all book
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Get All Book
+    #==================================#
+    #    RESPONSE GET BOOK BY ID
+    #==================================#
+    getBookByIdSuccess:
+      description: success get book by ID
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get Book By ID
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: Rich Dad Poor Dad
+                  file_foto:
+                    type: string
+                    example: sdJksHJ12ks.jpg
+                  rent_price:
+                    type: integer
+                    example: 500
+                  address:
+                    type: string
+                    example: Depok
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 3
+                      name:
+                        type: string
+                        example: Robert Kiyosaki
+                  publisher:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      name:
+                        type: integer
+                        example: Gramedia
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 4
+                      name:
+                        type: string
+                        example: Motivasi
+                  is_available:
+                    type: boolean
+                    example: true
+    getBookByIdFailed:
+      description: fail to get book by ID
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Get Book By ID
+    #==================================#
+    #    RESPONSE SEARCH BOOK
+    #==================================#
+    searchBookByKeywordSuccess:
+      description: success search book
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Seach Book
+              data:
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: Rich Dad Poor Dad
+                    file_foto:
+                      type: string
+                      example: sdJksHJ12ks.jpg
+                    rent_price:
+                      type: integer
+                      example: 500
+                    address:
+                      type: string
+                      example: Depok
+                    author:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 3
+                        name:
+                          type: string
+                          example: Robert Kiyosaki
+                    publisher:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 2
+                        name:
+                          type: integer
+                          example: Gramedia
+                    category:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 4
+                        name:
+                          type: string
+                          example: Motivasi
+                    is_available:
+                      type: boolean
+                      example: true
+    searchBookByKeywordFailed:
+      description: fail to search book
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Search Book
+    #==================================#
+    #    RESPONSE GET LIST CATEGORY
+    #==================================#
+    getListCategorySuccess:
+      description: success get list category
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get List Category
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 2
+                    name:
+                      type: string
+                      example: Sejarah
+    getListCategoryFailed:
+      description: fail to get list category
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Get List Category
+    #==================================#
+    #    RESPONSE GET LIST PUBLISHER
+    #==================================#
+    getListPublisherSuccess:
+      description: success get list publisher
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get List Publisher
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 2
+                    name:
+                      type: string
+                      example: Gramedia
+    getListPublisherFailed:
+      description: fail to get list publisher
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Get List Publisher
+    #==================================#
+    #    RESPONSE GET LIST AUTHOR
+    #==================================#
+    getListAuthorSuccess:
+      description: success get list author
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get List Author
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: JK. Rowling
+    getListAuthorFailed:
+      description: fail to get list author
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Get List Author
+    #==================================#
+    #    RESPONSE GET TRANSACTION
+    #==================================#
+    getTransactionSuccess:
+      description: success get transaction
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get Transaction
+    getTransactionFailed:
+      description: fail to get transaction
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Get Transaction
+    #==================================#
+    #    RESPONSE CREATE TRANSACTION
+    #==================================#
+    createTransactionSuccess:
+      description: success create transaction
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Create Transaction
+    createTransactionFailed:
+      description: fail to create transaction
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Create Transaction
+    #==================================#
+    #    DEFAULT RESPONSE
+    #==================================#
+    operationSuccess:
+      description: operation success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Operation Success
+    operationFailed:
+      description: operation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Operation Failed

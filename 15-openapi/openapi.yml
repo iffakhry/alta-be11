@@ -30,6 +30,9 @@ servers:
           - "dev"
 tags:
   - name: Pets
+    description: "Manajemen data pets"
+  - name: User
+    description: "Manajemen data pengguna"
 paths:
   /pets:
     get:
@@ -40,30 +43,356 @@ paths:
         '200':
           description: A list of pets.
     post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pets
       description: 'insert pet data'
       parameters: []
       responses:
         '200':
           description: OK
+  /pets/{id_pet}:
     delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Pets
       description: 'delete pet data'
-      parameters: []
+      parameters:
+        - name: id_pet
+          description: id pet
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
       responses:
         '200':
           description: OK
+# users endpoint
+  /profile:
+    get:
+      summary: "Get profile"
+      security:
+        - bearerAuth: []
+      tags:
+        - "User"
+      responses:
+        200:
+          description: Response for success retrieve all user data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseObj'
+              example:
+                message: "success get profile"
+                data:
+                    id: 1
+                    full_name: "Rachman Kamil"
+                    telp: "08123455"
+                    team: "Academic"
+                    email: "kamil@alterra.id"
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
   /users:
-    get:
-      description: ''
-      parameters: []
+    post:
+      summary: "Register New User"
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              $ref: '#/components/schemas/User'
+            example:
+              full_name: "Iswanul Umam"
+              email: "umam@alterra.id"
+              password: "password123"
+              role: admin
+              id_team: 1
       responses:
-        '200':
-          description: OK
-  /users/{iduser}:
+        201:
+          description: "Sucess register new user"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseObj'
+              example:
+                message: "success register new user"
+                data:
+                  id: 7
+                  full_name: "Iswanul Umam"
+                  email: "umam@alterra.id"
+                  role: admin
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
     get:
-      description: ''
-      parameters: []
+      summary: "Get All User"
+      security:
+        - bearerAuth: []
+      tags:
+        - "User"
+      parameters:
+        - in: query
+          name: "key"
+          schema:
+            type: string
       responses:
-        '200':
-          description: OK
+        200:
+          description: Response for success retrieve all user data
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseArr'
+              example:
+                message: "success get all user data"
+                data:
+                  - id: 1
+                    full_name: "Rachman Kamil"
+                    team: "Academic"
+                    email: "kamil@alterra.id"
+                  - id: 1
+                    full_name: "Ruth Rom"
+                    team: "People"
+                    email: "ruth@alterra.id"
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    put:
+      summary: "Update profile"
+      security:
+        - bearerAuth: []
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              $ref: '#/components/schemas/User'
+            example:
+              full_name: "Iswanul Umam"
+              email: "umam@alterra.id"
+              password: "password123"
+              role: admin
+              id_team: 1
+      responses:
+        200:
+          description: "Sucess update profile"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ResponseObj'
+              example:
+                message: "Sucess update profile"
+                data:
+                  id: 7
+                  team: "Academic"
+                  full_name: "Iswanul Umam"
+                  email: "umam@alterra.id"
+                  role: admin
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
 
 
+########
+# COMPONENT
+########
+
+components:
+
+# JWT Schema
+  securitySchemes:
+    bearerAuth:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Team:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int64
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        full_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+        id_team:
+          type: integer
+          format: int64
+        status:
+          type: boolean
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    Mentee:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        id_class:
+          type: integer
+          format: int64
+        full_name:
+          type: string
+        nick_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        current_address:
+          type: string
+        home_address:
+          type: string
+        telegram:
+          type: string
+        id_status:
+          type: integer
+          format: int64
+        gender:
+          type: string
+          enum:
+            - L
+            - P
+        education_type:
+          type: string
+          enum:
+            - "informatics"
+            - "non-informatics"
+        major:
+          type: string
+        graduate:
+          type: integer
+          format: int32
+        institution:
+          type: string
+        emergency_name:
+          type: string
+        emergency_phone:
+          type: string
+        emergency_status:
+          type: string
+          enum:
+            - "orang tua"
+            - "saudara kandung"
+            - "kakek nenek"
+            - "keluarga"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    RequestFeedback:
+      type: object
+      properties:
+        notes:
+          type: string
+        proof:
+          type: string
+          format: binary
+        id_user:
+          type: integer
+          format: int64
+        id_mentee:
+          type: integer
+          format: int64
+        id_status:
+          type: integer
+          format: int64
+    ResponseObj:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+    ResponseArr:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items: 
+            type: object
+    ResponseUser:
+      type: object
+      properties:
+        res: 
+          type: object
+          $ref: '#/components/schemas/ResponseObj'
+        data:
+          type: object
+          $ref: '#/components/schemas/User'
+  responses:
+    404:
+      description: "The requested resource was not found."
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ResponseObj'
+          example:
+            message: "Requested resource was not found"
+            data: null
+    500:
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ResponseObj'
+          example:
+            message: "Internal Server Error"
+            data: null
+  
